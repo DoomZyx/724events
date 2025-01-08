@@ -8,10 +8,12 @@ const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
 
-  // Trie des événements par date décroissante
-  const byDateDesc = data?.focus.sort((evtA, evtB) =>
-    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
-  );
+  // Trie des événements par date décroissante et verifie si il contient des éléments
+  const byDateDesc = data?.focus?.length
+    ? data.focus.sort((evtA, evtB) =>
+        new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+      )
+    : [];
 
   // Changer de slide automatiquement toutes les 5 secondes
   useEffect(() => {
