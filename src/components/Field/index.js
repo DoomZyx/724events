@@ -8,7 +8,11 @@ export const FIELD_TYPES = {
 };
 
 const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
+  const handleInputChange = (e) => {
+    e.target.value = e.target.value.toLowerCase(); // Forcer les minuscules
+  };
   let component;
+
   switch (type) {
     case FIELD_TYPES.INPUT_TEXT:
       component = (
@@ -17,11 +21,22 @@ const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
           name={name}
           placeholder={placeholder}
           data-testid="field-testid"
+          autoCapitalize="none" // Désactiver les majuscules automatiques
+          spellCheck="false" // Désactiver la correction automatique
+          autoComplete="off" // Désactiver l'auto-complétion
+          onInput={handleInputChange}
         />
       );
       break;
     case FIELD_TYPES.TEXTAREA:
-      component = <textarea name={name} data-testid="field-testid" />;
+      component = (
+        <textarea
+          name={name}
+          data-testid="field-testid"
+          autoCapitalize="none" // Désactiver les majuscules automatiques
+          spellCheck="false" // Désactiver la correction automatique
+        />
+      );
       break;
     default:
       component = (
@@ -30,6 +45,10 @@ const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
           name={name}
           placeholder={placeholder}
           data-testid="field-testid"
+          autoCapitalize="none" // Désactiver les majuscules automatiques
+          spellCheck="false" // Désactiver la correction automatique
+          autoComplete="off" // Désactiver l'auto-complétion
+          onInput={handleInputChange}
         />
       );
   }
@@ -42,16 +61,17 @@ const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
 };
 
 Field.propTypes = {
-  type: PropTypes.oneOf(Object.values(FIELD_TYPES)),
-  name: PropTypes.string,
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
+  type: PropTypes.oneOf(Object.values(FIELD_TYPES)), // Type de champ (input ou textarea)
+  name: PropTypes.string, // Nom du champ
+  label: PropTypes.string, // Étiquette du champ
+  placeholder: PropTypes.string, // Texte indicatif dans le champ
 };
- Field.defaultProps = {
-   label: "",
-   placeholder: "",
-   type: FIELD_TYPES.INPUT_TEXT,
-   name: "field-name",
- }
+
+Field.defaultProps = {
+  label: "",
+  placeholder: "",
+  type: FIELD_TYPES.INPUT_TEXT,
+  name: "field-name",
+};
 
 export default Field;

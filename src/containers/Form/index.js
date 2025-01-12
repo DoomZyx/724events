@@ -4,18 +4,23 @@ import Field, { FIELD_TYPES } from "../../components/Field";
 import Select from "../../components/Select";
 import Button, { BUTTON_TYPES } from "../../components/Button";
 
-const mockContactApi = () => new Promise((resolve) => { setTimeout(resolve, 500); })
+const mockContactApi = () =>
+  new Promise((resolve) => {
+    setTimeout(resolve, 500);
+  });
 
 const Form = ({ onSuccess, onError }) => {
   const [sending, setSending] = useState(false);
+
+  // Gestion de l'envoi du formulaire
   const sendContact = useCallback(
     async (evt) => {
       evt.preventDefault();
       setSending(true);
-      // We try to call mockContactApi
       try {
         await mockContactApi();
         setSending(false);
+        onSuccess();
       } catch (err) {
         setSending(false);
         onError(err);
@@ -23,12 +28,25 @@ const Form = ({ onSuccess, onError }) => {
     },
     [onSuccess, onError]
   );
+
+  // Transformation globale des valeurs du formulaire en minuscules
+  const handleInputChange = (e) => {
+    const input = e.target;
+    if (
+      input.name === "email" ||
+      input.name === "nom" ||
+      input.name === "prenom"
+    ) {
+      input.value = input.value.toLowerCase(); // Transforme la valeur saisie en minuscules
+    }
+  };
+
   return (
-    <form onSubmit={sendContact}>
+    <form onSubmit={sendContact} onInput={handleInputChange}>
       <div className="row">
         <div className="col">
-          <Field placeholder="" label="Nom" />
-          <Field placeholder="" label="Prénom" />
+          <Field placeholder="Nom" label="Nom" name="nom" />
+          <Field placeholder="Prénom" label="Prénom" name="prenom" />
           <Select
             selection={["Personel", "Entreprise"]}
             onChange={() => null}
@@ -36,14 +54,14 @@ const Form = ({ onSuccess, onError }) => {
             type="large"
             titleEmpty
           />
-          <Field placeholder="" label="Email" />
+          <Field placeholder="Email" label="Email" name="email" />
           <Button type={BUTTON_TYPES.SUBMIT} disabled={sending}>
             {sending ? "En cours" : "Envoyer"}
           </Button>
         </div>
         <div className="col">
           <Field
-            placeholder="message"
+            placeholder="Message"
             label="Message"
             type={FIELD_TYPES.TEXTAREA}
           />
@@ -56,11 +74,11 @@ const Form = ({ onSuccess, onError }) => {
 Form.propTypes = {
   onError: PropTypes.func,
   onSuccess: PropTypes.func,
-}
+};
 
 Form.defaultProps = {
   onError: () => null,
   onSuccess: () => null,
-}
+};
 
 export default Form;
