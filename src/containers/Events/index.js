@@ -16,8 +16,8 @@ const EventList = () => {
   const filteredEvents = (
     (!type
       ? data?.events
-      : data?.events) || []
-  ).filter((event, index) => {
+      : data?.events.filter((event) => event.type === type)) || []
+  ).filter((_events, index) => {
     if (
       (currentPage - 1) * PER_PAGE <= index &&
       PER_PAGE * currentPage > index
@@ -26,23 +26,39 @@ const EventList = () => {
     }
     return false;
   });
+
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
   };
-  const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
-  const typeList = new Set(data?.events.map((event) => event.type));
+
+  // filtre les événements par type
+
+  // Calcule le nb total d'événements en fonction du type 
+
+  const totalEvents =
+    data?.events.filter((event) => (type ? event.type === type : true))
+      .length || 0;
+
+      // Se base sur le résultat de totalEevents pour calculer le nombre de pages 
+  const pageNumber = Math.ceil(totalEvents / PER_PAGE);
+
+  // conversion de la liste des types en tableau 
+  const typeList = Array.from(new Set(data?.events.map((event) => event.type)));
+
   return (
     <>
-      {error && <div>An error occured</div>}
+      {error && <div>An error occurred</div>}
       {data === null ? (
         "loading"
       ) : (
         <>
           <h3 className="SelectTitle">Catégories</h3>
           <Select
-            selection={Array.from(typeList)}
-            onChange={(value) => (value ? changeType(value) : changeType(null))}
+            selection={typeList}
+            onChange={(value) => changeType(value)}
+            titleEmpty={false}
+            label="Type d'événement"
           />
           <div id="events" className="ListContainer">
             {filteredEvents.map((event) => (
@@ -59,10 +75,14 @@ const EventList = () => {
               </Modal>
             ))}
           </div>
-          <div className="Pagination">
-            {[...Array(pageNumber || 0)].map((_, n) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <a key={n} href="#events" onClick={() => setCurrentPage(n + 1)}>
+          <div className="Pagination"> 
+            {/* Utilisation de Arrayfrom  */}
+            {Array.from({ length: pageNumber }, (_, n) => (
+             <a
+                key={`page-${n + 1}`}
+                href="#events"
+                onClick={() => setCurrentPage(n + 1)}
+              >
                 {n + 1}
               </a>
             ))}

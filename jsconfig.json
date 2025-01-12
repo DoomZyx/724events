@@ -1,9 +1,5 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx", // JSX sans import
-    "target": "esnext",
-    "module": "esnext", // ES6
-    "baseUrl": "src",
-    "allowJs": true
+    "baseUrl": "src"
   }
 }
