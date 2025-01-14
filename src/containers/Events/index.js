@@ -19,6 +19,7 @@ const EventList = () => {
       : data?.events.filter((event) => event.type === type)) || []
   ).filter((_events, index) => {
     if (
+      // Affiche 9 évenements en fonction de la page actuelle 
       (currentPage - 1) * PER_PAGE <= index &&
       PER_PAGE * currentPage > index
     ) {
