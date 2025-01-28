@@ -13,10 +13,15 @@ const EventList = () => {
   const { data, error } = useData();
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
+
+ // Trie des événements par date 
+  const trieEvents = data?.events.sort((a, b) => new Date(a.date) - new Date(b.date)) || [];
+
+  // Filtre les événements selon leur type et prend en compte la date et affiche tous les événements de leur type si type est nul 
   const filteredEvents = (
     (!type
-      ? data?.events
-      : data?.events.filter((event) => event.type === type)) || []
+      ? trieEvents
+      : trieEvents.filter((event) => event.type === type)) || []
   ).filter((_events, index) => {
     if (
       // Affiche 9 évenements en fonction de la page actuelle 
@@ -33,19 +38,21 @@ const EventList = () => {
     setType(evtType);
   };
 
-  // filtre les événements par type
 
-  // Calcule le nb total d'événements en fonction du type 
+  // Calcule le nb total d'événements en fonction du type et de la date 
 
   const totalEvents =
-    data?.events.filter((event) => (type ? event.type === type : true))
+    trieEvents.filter((event) => (type ? event.type === type : true))
       .length || 0;
 
       // Se base sur le résultat de totalEevents pour calculer le nombre de pages 
   const pageNumber = Math.ceil(totalEvents / PER_PAGE);
 
   // conversion de la liste des types en tableau 
-  const typeList = Array.from(new Set(data?.events.map((event) => event.type)));
+  const typeList = Array.from(new Set(trieEvents.map((event) => event.type)));
+
+
+
 
   return (
     <>

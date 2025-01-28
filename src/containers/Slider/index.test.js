@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Slider from "./index";
 import { api, DataProvider } from "../../contexts/DataContext";
 
@@ -41,4 +42,17 @@ describe("When slider is created", () => {
       "Oeuvre à la coopération entre le secteur public et le privé."
     );
   });
+});
+
+test("Le slider s'arrête lorsqu'on appuie sur la touche Espace", async () => {
+  render(<Slider byDateDesc={[{ id: 1, cover: "image.jpg" }]} />);
+
+  const sliderElement = screen.getByTestId("SlideCardList");
+  expect(sliderElement).not.toHaveClass("paused");
+
+  await userEvent.keyboard("{Space}");
+  expect(sliderElement).toHaveClass("paused");
+
+  await userEvent.keyboard("{Space}");
+  expect(sliderElement).not.toHaveClass("paused");
 });

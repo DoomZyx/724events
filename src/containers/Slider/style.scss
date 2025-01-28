@@ -1,5 +1,22 @@
 @import "src/colors.scss";
 
+.SlideCard {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.SlideCard--display {
+  opacity: 1;
+}
+
+.SlideCard--hide {
+  display: none;
+}
+
+.slider.paused {
+  animation-play-state: paused;
+}
+
 .SlideCardList {
   position: relative;
   width: 100%;
