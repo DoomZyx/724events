@@ -44,10 +44,11 @@ useEffect(() => {
 }, [isPaused, byDateDesc.length]);  
 
   return (
-    <div data-testid="SlideCardList" className="SlideCardList">
+    <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
         <div
           key={event.id || `event-${idx}`}
+          data-testid="slider"
           className={`slider ${isPaused ? "paused" : ""}`}
         >
           <div

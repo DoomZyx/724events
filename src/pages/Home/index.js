@@ -10,11 +10,11 @@ import Logo from "../../components/Logo";
 import Icon from "../../components/Icon";
 import Form from "../../containers/Form";
 import Modal from "../../containers/Modal";
+import ModalEvent from "../../containers/ModalEvent";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { data } = useData();
-  const last = data ? data.events[data.events.length - 1] : null; // Affiche le dernier événement de la liste sinon sa valeur est null
+  const { last } = useData();
   return (
     <>
       <header>
@@ -115,14 +115,23 @@ const Page = () => {
       <footer className="row">
         <div className="col presta">
           <h3>Notre dernière prestation</h3>
-          {last && (
-            <EventCard
-              imageSrc={last?.cover}
-              title={last?.title}
-              date={new Date(last?.date)}
-              small
-              label={last?.type}
-            />
+          {!last ? (
+            "Waiting last event..."
+          ) : (
+            <Modal key={last.id} Content={<ModalEvent event={last} />}>
+              {({ setIsOpened }) => (
+                <div data-testid="event-card">
+                  <EventCard
+                    onClick={() => setIsOpened(true)}
+                    imageSrc={last?.cover}
+                    title={last?.title}
+                    date={new Date(last?.date)}
+                    small
+                    label={last?.type}
+                  />
+                </div>
+              )}
+            </Modal>
           )}
         </div>
         <div className="col contact">
@@ -157,6 +166,6 @@ const Page = () => {
       </footer>
     </>
   );
-}
+};
 
 export default Page;
